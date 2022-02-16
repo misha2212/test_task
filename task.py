@@ -1,21 +1,12 @@
 from dadata import Dadata
 import sqlite3
 
-name = input('Введите Ваше имя: ')
-token = input('Введите Ваш API ключ: ')
-choise_language = input('Для ввода запросов и вывода результатов поддерживаются языки: английский/русский.'
-                        ' Оставить русский язык по умолчанию? Введите y/n : ')
-if choise_language == 'y':
-    language = 'ru'
-elif choise_language == 'n':
-    language = 'en'
 
-
-def users_data(name, token, language):
+def save_users_data(name, token, language):
     with sqlite3.connect("database.db") as sqlite_connection:
         cursor_db = sqlite_connection.cursor()
         cursor_db.execute("""CREATE TABLE IF NOT EXISTS users (
-                            user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
                             name TEXT NOT NULL,
                             api_key TEXT NOT NULL,
                             language TEXT NOT NULL 
@@ -24,10 +15,8 @@ def users_data(name, token, language):
         data_tuple = (name, token, language)
         cursor_db.execute(insert_data, data_tuple)
 
-users_data(name, token, language)
 
-
-def search_geo():
+def search_geo(token, language):
     while True:
         user_continue = input('Здесь Вы можете узнать координаты введенного адреса. Продолжить?'
                               ' Введите y / n : ')
@@ -47,4 +36,16 @@ def search_geo():
         elif user_continue == 'n':
             break
 
-search_geo()
+
+if __name__ == "__main__":
+    name = input('Введите Ваше имя: ')
+    token = input('Введите Ваш API ключ: ')
+    choise_language = input('Для ввода запросов и вывода результатов поддерживаются языки: английский/'
+                            'русский. Оставить русский язык по умолчанию? Введите y/n : ')
+    if choise_language == 'y':
+        language = 'ru'
+    elif choise_language == 'n':
+        language = 'en'
+
+    save_users_data(name, token, language)
+    search_geo(token, language)
